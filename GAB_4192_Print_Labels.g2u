@@ -1,0 +1,24 @@
+Program.Sub.Preflight.Start
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+	'Check for GAB Label file from ARC Project 4192
+	
+	V.Local.sFile.Declare
+	V.Local.bExists.Declare
+	V.Local.sRet.Declare
+	
+	F.Intrinsic.String.Build("{0}\GAB_4192_{1}_Label.txt",V.Caller.LocalGSSTempDir,V.Caller.Terminal,V.Local.sFile)
+	F.Intrinsic.File.Exists(V.Local.sFile,V.Local.bExists)
+	F.Intrinsic.Control.If(V.Local.bExists)
+		F.Intrinsic.File.File2String(V.Local.sFile,V.Local.sRet)
+		F.Intrinsic.String.Split(V.Local.sRet,"-",V.Local.sRet)
+		V.Passed.000008.Set(V.Local.sRet(0))
+		V.Passed.000002.Set(V.Local.sRet(1))
+	F.Intrinsic.Control.EndIf
+Program.Sub.Main.End
+
+Program.Sub.Comments.Start
+${$0$}$GAB_4192_Print_Labels$}$Joey T $ AGV$}$12/02/2016 3:16:22 PM$}$True
+Program.Sub.Comments.End
