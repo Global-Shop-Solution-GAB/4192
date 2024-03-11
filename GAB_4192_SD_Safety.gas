@@ -1,0 +1,37 @@
+Program.Sub.Preflight.Start
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+	'Recalculate the Qty On Hand on the screen if User is in the security Group SAFETY
+	'Qty_OnHand - Qty_Safety
+	'Hook: 14045,14050
+	
+	V.Local.bGroup.Declare(Boolean,False)
+	V.Local.fQtyOnHand.Declare(Float)
+	
+	F.Global.Security.IsInGroup(V.Caller.User,"SAFETY",V.Caller.CompanyCode,V.Local.bGroup)
+	F.Intrinsic.Control.If(V.Local.bGroup,=,True)
+		F.Intrinsic.Control.SelectCase(V.Caller.Hook)
+			F.Intrinsic.Control.Case(14045)
+				V.Passed.GAB-TEXT-1.Set("0.0000")
+				F.Intrinsic.Variable.SetProperty("GAB-TEXT-1","PW",90)
+				F.Intrinsic.Variable.SetProperty("GAB-TEXT-1","PL",101)
+				F.Intrinsic.Variable.SetProperty("GAB-TEXT-1","PT",183)
+				F.Intrinsic.Variable.SetProperty("GAB-TEXT-1","PA","T")
+				F.Intrinsic.Variable.SetProperty("GAB-TEXT-1","FC",V.Color.Black)
+				F.Intrinsic.UI.ChangeCallerProperty(V.Passed.GAB-TEXT-1,"HIDE",0)
+				F.Intrinsic.UI.ChangeCallerProperty(V.Passed.GAB-TEXT-1,"LOCK",0)
+				F.Intrinsic.UI.ChangeCallerProperty(V.Passed.000023,"HIDE",1)
+			
+			F.Intrinsic.Control.Case(14050)
+				F.Intrinsic.Math.Sub(V.Passed.000023,V.Passed.000015,V.Local.fQtyOnHand)
+				V.Passed.GAB-TEXT-1.Set(V.Local.fQtyOnHand.Format#####0.0000)
+			
+		F.Intrinsic.Control.EndSelect
+	F.Intrinsic.Control.EndIf
+Program.Sub.Main.End
+
+Program.Sub.Comments.Start
+${$0$}$GAB_4192_SD_Safety$}$AGV$}$12/14/2016 10:44:31 AM$}$False
+Program.Sub.Comments.End
